@@ -2,7 +2,8 @@ import 'dart:typed_data';
 
 typedef JsonMap = Map<String, dynamic>;
 
-String _stringValue(Object? value, [String fallback = '']) => value?.toString() ?? fallback;
+String _stringValue(Object? value, [String fallback = '']) =>
+    value?.toString() ?? fallback;
 
 int _intValue(Object? value, [int fallback = 0]) {
   if (value is int) {
@@ -53,7 +54,8 @@ JsonMap _jsonMap(Object? value) {
     return value;
   }
   if (value is Map) {
-    return value.map((key, dynamic mapValue) => MapEntry(key.toString(), mapValue));
+    return value
+        .map((key, dynamic mapValue) => MapEntry(key.toString(), mapValue));
   }
   return <String, dynamic>{};
 }
@@ -104,12 +106,15 @@ class EmbeddingModelOption {
         id: _stringValue(json['id']),
         name: _stringValue(json['name']),
         provider: _stringValue(json['provider']),
-        dimensions: (json['dimensions'] is List ? json['dimensions'] as List : const <dynamic>[])
+        dimensions: (json['dimensions'] is List
+                ? json['dimensions'] as List
+                : const <dynamic>[])
             .map((item) => _intValue(item))
             .toList(growable: false),
         defaultDimension: _intValue(
           json['defaultDimension'],
-          (json['dimensions'] is List && (json['dimensions'] as List).isNotEmpty)
+          (json['dimensions'] is List &&
+                  (json['dimensions'] as List).isNotEmpty)
               ? _intValue((json['dimensions'] as List).first)
               : 0,
         ),
@@ -407,7 +412,8 @@ class SearchResult {
         documentName: _stringValue(json['document_name']),
         collectionId: _stringValue(json['collection_id']),
         collectionName: _stringValue(json['collection_name']),
-        chunkIndex: json['chunk_index'] == null ? null : _intValue(json['chunk_index']),
+        chunkIndex:
+            json['chunk_index'] == null ? null : _intValue(json['chunk_index']),
         content: _stringValue(json['content']),
         score: _doubleValue(json['score']),
         metadata: _jsonMap(json['metadata']),
@@ -467,8 +473,10 @@ class LogsOverview {
 
   factory LogsOverview.fromJson(JsonMap json) => LogsOverview(
         total: _intValue(json['total']),
-        byLevel: _jsonMap(json['by_level']).map((key, value) => MapEntry(key, _intValue(value))),
-        byApp: _jsonMap(json['by_app']).map((key, value) => MapEntry(key, _intValue(value))),
+        byLevel: _jsonMap(json['by_level'])
+            .map((key, value) => MapEntry(key, _intValue(value))),
+        byApp: _jsonMap(json['by_app'])
+            .map((key, value) => MapEntry(key, _intValue(value))),
         topEndpoints: _jsonMapList(json['top_endpoints']),
       );
 
@@ -490,10 +498,18 @@ class DashboardOverview {
 
   factory DashboardOverview.fromJson(JsonMap json) => DashboardOverview(
         summary: DashboardStats.fromJson(_jsonMap(json['summary'])),
-        recentActivity: _jsonMapList(json['recent_activity']).map(RecentActivity.fromJson).toList(growable: false),
-        topCollections: _jsonMapList(json['top_collections']).map(TopCollection.fromJson).toList(growable: false),
-        uploadsPerDay: _jsonMapList(json['uploads_per_day']).map(UploadsPerDay.fromJson).toList(growable: false),
-        vectorsPerWeek: _jsonMapList(json['vectors_per_week']).map(VectorsPerWeek.fromJson).toList(growable: false),
+        recentActivity: _jsonMapList(json['recent_activity'])
+            .map(RecentActivity.fromJson)
+            .toList(growable: false),
+        topCollections: _jsonMapList(json['top_collections'])
+            .map(TopCollection.fromJson)
+            .toList(growable: false),
+        uploadsPerDay: _jsonMapList(json['uploads_per_day'])
+            .map(UploadsPerDay.fromJson)
+            .toList(growable: false),
+        vectorsPerWeek: _jsonMapList(json['vectors_per_week'])
+            .map(VectorsPerWeek.fromJson)
+            .toList(growable: false),
         logsOverview: LogsOverview.fromJson(_jsonMap(json['logs_overview'])),
       );
 
@@ -602,7 +618,9 @@ class JobProgress {
         totalChunks: _intValue(json['total_chunks']),
         startedAt: _doubleValue(json['started_at']),
         updatedAt: _doubleValue(json['updated_at']),
-        etaSeconds: json['eta_seconds'] == null ? null : _doubleValue(json['eta_seconds']),
+        etaSeconds: json['eta_seconds'] == null
+            ? null
+            : _doubleValue(json['eta_seconds']),
         message: _stringValue(json['message']),
         documentName: _stringValue(json['document_name']),
         collectionId: _stringValue(json['collection_id']),
@@ -662,7 +680,9 @@ class LogEntry {
         response: json['response'] == null ? null : _jsonMap(json['response']),
         usuarioId: json['usuarioId']?.toString(),
         projetoId: json['projetoId']?.toString(),
-        tempoExecucao: json['tempoExecucao'] == null ? null : _intValue(json['tempoExecucao']),
+        tempoExecucao: json['tempoExecucao'] == null
+            ? null
+            : _intValue(json['tempoExecucao']),
       );
 
   final String id;
@@ -680,7 +700,8 @@ class LogEntry {
 }
 
 class PageMeta {
-  const PageMeta({required this.page, required this.pageSize, required this.total});
+  const PageMeta(
+      {required this.page, required this.pageSize, required this.total});
 
   factory PageMeta.fromJson(JsonMap json) => PageMeta(
         page: _intValue(json['page']),
@@ -697,7 +718,9 @@ class LogList {
   const LogList({required this.items, required this.meta});
 
   factory LogList.fromJson(JsonMap json) => LogList(
-        items: _jsonMapList(json['items']).map(LogEntry.fromJson).toList(growable: false),
+        items: _jsonMapList(json['items'])
+            .map(LogEntry.fromJson)
+            .toList(growable: false),
         meta: PageMeta.fromJson(_jsonMap(json['meta'])),
       );
 
@@ -845,7 +868,9 @@ class TokenUsageRecord {
         modelId: _stringValue(json['modelId']),
         callType: _stringValue(json['callType']),
         inputTokens: _intValue(json['inputTokens']),
-        outputTokens: json['outputTokens'] == null ? null : _intValue(json['outputTokens']),
+        outputTokens: json['outputTokens'] == null
+            ? null
+            : _intValue(json['outputTokens']),
         totalTokens: _intValue(json['totalTokens']),
         latencyMs: _intValue(json['latencyMs']),
         status: _stringValue(json['status']),
@@ -898,10 +923,13 @@ class TokenUsageSummary {
 }
 
 class TokenUsageList {
-  const TokenUsageList({required this.items, required this.meta, required this.summary});
+  const TokenUsageList(
+      {required this.items, required this.meta, required this.summary});
 
   factory TokenUsageList.fromJson(JsonMap json) => TokenUsageList(
-        items: _jsonMapList(json['items']).map(TokenUsageRecord.fromJson).toList(growable: false),
+        items: _jsonMapList(json['items'])
+            .map(TokenUsageRecord.fromJson)
+            .toList(growable: false),
         meta: PageMeta.fromJson(_jsonMap(json['meta'])),
         summary: TokenUsageSummary.fromJson(_jsonMap(json['summary'])),
       );
@@ -995,7 +1023,8 @@ class UpdateCollectionParams {
 }
 
 class DocumentListParams {
-  const DocumentListParams({this.skip = 0, this.limit = 100, this.collectionId});
+  const DocumentListParams(
+      {this.skip = 0, this.limit = 100, this.collectionId});
 
   final int skip;
   final int limit;
@@ -1093,7 +1122,8 @@ class TagListParams {
   final int skip;
   final int limit;
 
-  Map<String, Object?> toQueryParameters() => <String, Object?>{'skip': skip, 'limit': limit};
+  Map<String, Object?> toQueryParameters() =>
+      <String, Object?>{'skip': skip, 'limit': limit};
 }
 
 class LogListParams {

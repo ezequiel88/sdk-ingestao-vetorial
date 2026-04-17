@@ -9,7 +9,8 @@ import 'package:test/test.dart';
 class RecordingClient extends http.BaseClient {
   RecordingClient(this._handler);
 
-  final Future<http.StreamedResponse> Function(http.BaseRequest request) _handler;
+  final Future<http.StreamedResponse> Function(http.BaseRequest request)
+      _handler;
   http.BaseRequest? lastRequest;
 
   @override
@@ -94,7 +95,8 @@ void main() {
         }),
       );
 
-      final sdk = IngestaoVetorialClient(baseUrl: 'http://localhost:8000', httpClient: client);
+      final sdk = IngestaoVetorialClient(
+          baseUrl: 'http://localhost:8000', httpClient: client);
 
       final response = await sdk.reprocessDocument('doc-1',
           mode: ReprocessMode.append, sourceVersion: 1);
@@ -127,14 +129,16 @@ void main() {
         }),
       );
 
-      final sdk = IngestaoVetorialClient(baseUrl: 'http://localhost:8000', httpClient: client);
+      final sdk = IngestaoVetorialClient(
+          baseUrl: 'http://localhost:8000', httpClient: client);
       final response = await sdk.dashboardOverview();
 
       expect(response.summary.totalVectors, 1000);
       expect(response.logsOverview.total, 10);
     });
 
-    test('upload serializes metadata and collection id as multipart fields', () async {
+    test('upload serializes metadata and collection id as multipart fields',
+        () async {
       final client = RecordingClient(
         (request) async => jsonResponse(<String, Object?>{
           'success': true,
@@ -145,13 +149,16 @@ void main() {
         }),
       );
 
-      final sdk = IngestaoVetorialClient(baseUrl: 'http://localhost:8000', httpClient: client);
+      final sdk = IngestaoVetorialClient(
+          baseUrl: 'http://localhost:8000', httpClient: client);
 
       await sdk.upload(
-        UploadFile.fromBytes(filename: 'file.pdf', bytes: Uint8List.fromList(<int>[1, 2, 3])),
+        UploadFile.fromBytes(
+            filename: 'file.pdf', bytes: Uint8List.fromList(<int>[1, 2, 3])),
         const UploadOptions(
           collectionId: 'col-1',
-          metadata: UploadMetadata(documentType: 'report', tags: <String>['demo']),
+          metadata:
+              UploadMetadata(documentType: 'report', tags: <String>['demo']),
           overwriteExisting: true,
         ),
       );
@@ -161,7 +168,8 @@ void main() {
       final multipart = request! as http.MultipartRequest;
       expect(multipart.fields['collection_id'], 'col-1');
       expect(multipart.fields['overwrite_existing'], 'true');
-      final metadata = jsonDecode(multipart.fields['metadata']!) as Map<String, dynamic>;
+      final metadata =
+          jsonDecode(multipart.fields['metadata']!) as Map<String, dynamic>;
       expect(metadata['document_type'], 'report');
       expect((metadata['tags'] as List<Object?>).single, 'demo');
       expect(multipart.files.single.filename, 'file.pdf');
@@ -174,20 +182,51 @@ void main() {
         if (calls == 1) {
           return jsonResponse(<String, Object?>{
             'items': <Object?>[
-              <String, Object?>{'job_id': 'job-1', 'document_id': 'doc-1', 'version': 1, 'status': 'chunking', 'percent': 50, 'processed_chunks': 1, 'total_chunks': 2, 'started_at': 1, 'updated_at': 2, 'eta_seconds': 3, 'message': 'running', 'document_name': 'a.pdf', 'collection_id': 'col-1', 'error': ''},
+              <String, Object?>{
+                'job_id': 'job-1',
+                'document_id': 'doc-1',
+                'version': 1,
+                'status': 'chunking',
+                'percent': 50,
+                'processed_chunks': 1,
+                'total_chunks': 2,
+                'started_at': 1,
+                'updated_at': 2,
+                'eta_seconds': 3,
+                'message': 'running',
+                'document_name': 'a.pdf',
+                'collection_id': 'col-1',
+                'error': ''
+              },
             ],
             'meta': <String, Object?>{'has_more': true},
           });
         }
         return jsonResponse(<String, Object?>{
           'items': <Object?>[
-            <String, Object?>{'job_id': 'job-2', 'document_id': 'doc-2', 'version': 1, 'status': 'completed', 'percent': 100, 'processed_chunks': 2, 'total_chunks': 2, 'started_at': 1, 'updated_at': 2, 'eta_seconds': null, 'message': 'done', 'document_name': 'b.pdf', 'collection_id': 'col-1', 'error': ''},
+            <String, Object?>{
+              'job_id': 'job-2',
+              'document_id': 'doc-2',
+              'version': 1,
+              'status': 'completed',
+              'percent': 100,
+              'processed_chunks': 2,
+              'total_chunks': 2,
+              'started_at': 1,
+              'updated_at': 2,
+              'eta_seconds': null,
+              'message': 'done',
+              'document_name': 'b.pdf',
+              'collection_id': 'col-1',
+              'error': ''
+            },
           ],
           'meta': <String, Object?>{'has_more': false},
         });
       });
 
-      final sdk = IngestaoVetorialClient(baseUrl: 'http://localhost:8000', httpClient: client);
+      final sdk = IngestaoVetorialClient(
+          baseUrl: 'http://localhost:8000', httpClient: client);
 
       final jobs = await sdk.activeJobs();
 
@@ -207,7 +246,8 @@ void main() {
         ),
       );
 
-      final sdk = IngestaoVetorialClient(baseUrl: 'http://localhost:8000', httpClient: client);
+      final sdk = IngestaoVetorialClient(
+          baseUrl: 'http://localhost:8000', httpClient: client);
       final stream = await sdk.streamProgress();
       final lines = await stream.toList();
 
@@ -216,13 +256,17 @@ void main() {
     });
 
     test('exportLogs returns raw bytes', () async {
-      final bytes = Uint8List.fromList(utf8.encode('timestamp,nivel\n2026-01-01,INFO\n'));
+      final bytes =
+          Uint8List.fromList(utf8.encode('timestamp,nivel\n2026-01-01,INFO\n'));
       final client = RecordingClient(
-        (request) async => http.StreamedResponse(Stream<List<int>>.value(bytes), 200),
+        (request) async =>
+            http.StreamedResponse(Stream<List<int>>.value(bytes), 200),
       );
 
-      final sdk = IngestaoVetorialClient(baseUrl: 'http://localhost:8000', httpClient: client);
-      final result = await sdk.exportLogs(const LogExportParams(format: LogExportFormat.csv));
+      final sdk = IngestaoVetorialClient(
+          baseUrl: 'http://localhost:8000', httpClient: client);
+      final result = await sdk
+          .exportLogs(const LogExportParams(format: LogExportFormat.csv));
 
       expect(utf8.decode(result), contains('timestamp,nivel'));
       expect(client.lastRequest?.url.queryParameters['format'], 'csv');
@@ -233,7 +277,8 @@ void main() {
         (request) async => jsonResponse(<String, Object?>{'accepted': 1}),
       );
 
-      final sdk = IngestaoVetorialClient(baseUrl: 'http://localhost:8000', httpClient: client);
+      final sdk = IngestaoVetorialClient(
+          baseUrl: 'http://localhost:8000', httpClient: client);
       final response = await sdk.ingestLogs(
         const <LogIngestItem>[
           LogIngestItem(
@@ -266,8 +311,10 @@ void main() {
         }),
       );
 
-      final sdk = IngestaoVetorialClient(baseUrl: 'http://localhost:8000', httpClient: client);
-      final response = await sdk.tokenUsage(const TokenUsageParams(provider: 'openai', status: 'success'));
+      final sdk = IngestaoVetorialClient(
+          baseUrl: 'http://localhost:8000', httpClient: client);
+      final response = await sdk.tokenUsage(
+          const TokenUsageParams(provider: 'openai', status: 'success'));
 
       expect(response.summary.totalTokens, 0);
       expect(client.lastRequest?.url.queryParameters['provider'], 'openai');
