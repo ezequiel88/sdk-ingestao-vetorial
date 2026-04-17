@@ -10,10 +10,6 @@ sdk/js/node_modules/
 sdk/js/dist/
 sdk/js/package-lock.json
 
-sdk/php/vendor/
-sdk/php/.phpunit.result.cache
-sdk/php/composer.lock
-
 sdk/csharp/**/bin/
 sdk/csharp/**/obj/
 

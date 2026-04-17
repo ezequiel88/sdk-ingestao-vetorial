@@ -17,7 +17,6 @@ Chaves aceitas:
 
 - `python`
 - `js`
-- `php`
 - `csharp`
 - `go`
 - `flutter`

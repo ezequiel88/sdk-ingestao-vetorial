@@ -11,7 +11,6 @@ Crie estes environments no repositorio:
 
 - `pypi`
 - `npm`
-- `packagist`
 - `nuget`
 - `pubdev`
 
@@ -37,19 +36,11 @@ $env:GITHUB_TOKEN = "<token-com-acesso-admin-ao-repo>"
 
 - `NPM_TOKEN`: token com permissao de publicacao no npm para o pacote `ingestao-vetorial-sdk`.
 
-### `packagist`
+### SDK PHP
 
-- `PACKAGIST_USERNAME`: usuario da conta que consegue disparar update no Packagist.
-- `PACKAGIST_API_TOKEN`: token de API dessa conta.
-- Antes do primeiro release do PHP, cadastre manualmente o repositorio `https://github.com/ezequiel88/sdk-ingestao-vetorial` em `https://packagist.org/packages/submit`.
-
-Observacao: o workflow nao depende mais de `PACKAGIST_PACKAGE`. A notificacao usa diretamente a URL publica do repositorio Git, que e o formato esperado pela API de update do Packagist.
-
-### Split do SDK PHP
-
-- `PHP_SPLIT_PUSH_TOKEN`: secret de repositório no monorepo com permissão de escrita em `ezequiel88/sdk-php-ingestao-vetorial`.
-- O workflow `sdk-sync-php-split.yml` usa esse token para fazer o split de `sdk/php` e atualizar a branch `main` do repositório dedicado.
-- Durante a migração, o release do Packagist deve acontecer no repositório dedicado, não no monorepo.
+- O SDK PHP foi movido para o repositório dedicado `ezequiel88/sdk-php-ingestao-vetorial`.
+- O release do Packagist nao faz mais parte deste monorepo.
+- Qualquer configuracao de `PACKAGIST_USERNAME` e `PACKAGIST_API_TOKEN` deve existir apenas no repositório dedicado.
 
 ### `nuget`
 
@@ -71,7 +62,6 @@ Observacao: o workflow nao depende mais de `PACKAGIST_PACKAGE`. A notificacao us
 1. Confirmar que os nomes publicados batem com os manifests:
    - Python: `ingestao-vetorial-sdk`
    - npm: `ingestao-vetorial-sdk`
-   - Packagist: `ingestao-vetorial/sdk`
    - NuGet: `IngestaoVetorial.SDK`
    - pub.dev: `ingestao_vetorial_flutter_sdk`
 2. Confirmar ownership/permissoes nas plataformas externas para esses nomes.
@@ -94,7 +84,6 @@ Observacao: o workflow nao depende mais de `PACKAGIST_PACKAGE`. A notificacao us
 5. Confirmar a execucao dos workflows por tag:
    - `sdk-release-python.yml`
    - `sdk-release-js.yml`
-   - `sdk-release-php.yml`
    - `sdk-release-csharp.yml`
    - `sdk-release-go.yml`
    - `sdk-release-flutter.yml`
@@ -104,7 +93,6 @@ Observacao: o workflow nao depende mais de `PACKAGIST_PACKAGE`. A notificacao us
 
 - Python: `sdk-python-vX.Y.Z`
 - JavaScript: `sdk-js-vX.Y.Z`
-- PHP: `sdk-php-vX.Y.Z`
 - C#: `sdk-csharp-vX.Y.Z`
 - Go: `sdk/go/vX.Y.Z`
 - Flutter: `sdk-flutter-vX.Y.Z`

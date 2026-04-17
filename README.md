@@ -6,7 +6,7 @@ Repositorio publico dedicado aos SDKs do Ingestao Vetorial.
 
 - `sdk/python/` — pacote para PyPI
 - `sdk/js/` — pacote para npm
-- `sdk/php/` — pacote para Packagist
+- `sdk-php-ingestao-vetorial/` — repositorio dedicado do SDK PHP para Packagist
 - `sdk/csharp/` — pacote para NuGet
 - `sdk/go/` — modulo Go publico
 - `sdk/flutter/` — pacote Dart/Flutter para pub.dev
@@ -17,13 +17,13 @@ Repositorio publico dedicado aos SDKs do Ingestao Vetorial.
 
 1. PRs que alterem o comportamento publico de qualquer SDK devem incluir um arquivo em `.changeset/`.
 2. Ao entrar na `main`, o workflow `sdk-release-main.yml` valida os SDKs, calcula as proximas versoes, atualiza os manifests necessarios, remove os changesets consumidos e cria tags.
-3. As tags disparam os workflows por linguagem para publicar em PyPI, npm, Packagist, NuGet e GitHub Releases.
+3. As tags disparam os workflows por linguagem para publicar em PyPI, npm, NuGet, GitHub Releases e pub.dev.
 
-## Migracao do PHP
+## SDK PHP
 
-- O SDK PHP esta sendo sincronizado para o repositorio dedicado `ezequiel88/sdk-php-ingestao-vetorial`.
-- O workflow `sdk-sync-php-split.yml` faz o split de `sdk/php` e atualiza a branch `main` do repositorio dedicado.
-- O corte final, com remocao de `sdk/php` deste monorepo, deve acontecer apenas depois da validacao do novo repositorio e do release no Packagist.
+- O SDK PHP foi extraido para o repositório dedicado `ezequiel88/sdk-php-ingestao-vetorial`.
+- Publicacao Composer/Packagist passa a acontecer exclusivamente nesse repositório dedicado.
+- Este monorepo nao publica mais o pacote PHP e nao aceita novos changesets para `php`.
 
 ## Ajustes apos a criacao do repositorio
 
@@ -39,10 +39,8 @@ Confirme estes pontos sempre que a URL publica ou a organizacao mudar:
 
 - Environment `pypi`: `PYPI_API_TOKEN`
 - Environment `npm`: `NPM_TOKEN`
-- Environment `packagist`: `PACKAGIST_USERNAME`, `PACKAGIST_API_TOKEN`
 - Environment `nuget`: `NUGET_API_KEY`
 - Environment `pubdev`: sem secret obrigatoria no modelo atual do pub.dev com GitHub Actions + OIDC
-- Secret de repositorio: `PHP_SPLIT_PUSH_TOKEN` com permissao de escrita em `ezequiel88/sdk-php-ingestao-vetorial`
 
 O SDK Go usa apenas o `GITHUB_TOKEN` automatico para criar GitHub Releases.
 

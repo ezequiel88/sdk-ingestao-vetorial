@@ -35,10 +35,6 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.2"
-          coverage: none
       - uses: dart-lang/setup-dart@v1
 
       - name: Build release plan
@@ -97,19 +93,6 @@ jobs:
         working-directory: sdk/csharp
         run: dotnet test --no-build -c Release --logger "console;verbosity=normal"
 
-      - name: Install PHP SDK dependencies
-        if: steps.plan.outputs.has_releases == 'true'
-        working-directory: sdk/php
-        run: composer install --no-interaction --prefer-dist
-      - name: Run PHP SDK tests
-        if: steps.plan.outputs.has_releases == 'true'
-        working-directory: sdk/php
-        run: ./vendor/bin/phpunit --testdox
-      - name: Run PHP SDK static analysis
-        if: steps.plan.outputs.has_releases == 'true'
-        working-directory: sdk/php
-        run: ./vendor/bin/phpstan analyse --memory-limit=256M
-
       - name: Install Flutter SDK dependencies
         if: steps.plan.outputs.has_releases == 'true'
         working-directory: sdk/flutter
@@ -140,7 +123,7 @@ jobs:
       - name: Commit version updates
         if: steps.plan.outputs.has_releases == 'true'
         run: |
-          git add .changeset sdk/python/pyproject.toml sdk/js/package.json sdk/php/composer.json sdk/csharp/IngestaoVetorial.SDK/IngestaoVetorial.SDK.csproj sdk/flutter/pubspec.yaml
+          git add .changeset sdk/python/pyproject.toml sdk/js/package.json sdk/csharp/IngestaoVetorial.SDK/IngestaoVetorial.SDK.csproj sdk/flutter/pubspec.yaml
           git commit -m "chore(release): version SDKs [skip sdk-release]"
 
       - name: Push release commit

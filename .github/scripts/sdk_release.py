@@ -78,14 +78,6 @@ def write_js_version(repo_root: Path, version: str) -> None:
     replace_once(repo_root / "sdk/js/package.json", r'("version"\s*:\s*")[^"]+("\s*,?)', rf'\g<1>{version}\g<2>')
 
 
-def read_php_version(repo_root: Path) -> str:
-    return read_with_regex(repo_root / "sdk/php/composer.json", r'"version"\s*:\s*"([^"]+)"')
-
-
-def write_php_version(repo_root: Path, version: str) -> None:
-    replace_once(repo_root / "sdk/php/composer.json", r'("version"\s*:\s*")[^"]+("\s*,?)', rf'\g<1>{version}\g<2>')
-
-
 def read_csharp_version(repo_root: Path) -> str:
     return read_with_regex(repo_root / "sdk/csharp/IngestaoVetorial.SDK/IngestaoVetorial.SDK.csproj", r"<Version>([^<]+)</Version>")
 
@@ -127,7 +119,6 @@ def write_flutter_version(repo_root: Path, version: str) -> None:
 SDKS: dict[str, SdkConfig] = {
     "python": SdkConfig("python", "sdk/python/pyproject.toml", "sdk-python-v", read_python_version, write_python_version),
     "js": SdkConfig("js", "sdk/js/package.json", "sdk-js-v", read_js_version, write_js_version),
-    "php": SdkConfig("php", "sdk/php/composer.json", "sdk-php-v", read_php_version, write_php_version),
     "csharp": SdkConfig("csharp", "sdk/csharp/IngestaoVetorial.SDK/IngestaoVetorial.SDK.csproj", "sdk-csharp-v", read_csharp_version, write_csharp_version),
     "go": SdkConfig("go", None, "sdk/go/v", read_go_version, None),
     "flutter": SdkConfig("flutter", "sdk/flutter/pubspec.yaml", "sdk-flutter-v", read_flutter_version, write_flutter_version),
