@@ -30,9 +30,12 @@ public sealed class IngestaoVetorialClient : IDisposable
     /// Creates a client that owns its <see cref="HttpClient"/> with a 30-second timeout.
     /// </summary>
     public IngestaoVetorialClient(string baseUrl, string apiKey)
-        : this(new HttpClient { BaseAddress = new Uri(baseUrl.TrimEnd('/') + "/") }, apiKey, ownsHttpClient: true)
+        : this(CreateOwnedHttpClient(baseUrl), apiKey, ownsHttpClient: true)
     {
     }
+
+    private static HttpClient CreateOwnedHttpClient(string baseUrl)
+        => new() { BaseAddress = new Uri(baseUrl.Trim().TrimEnd('/') + "/") };
 
     /// <summary>
     /// Creates a client using an existing <see cref="HttpClient"/>.

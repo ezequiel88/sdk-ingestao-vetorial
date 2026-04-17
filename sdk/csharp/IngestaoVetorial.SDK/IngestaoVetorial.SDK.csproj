@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>12</LangVersion>
     <PackageId>IngestaoVetorial.SDK</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Authors>Ezequiel Tavares</Authors>
     <Description>Official .NET SDK for the Ingestão Vetorial API</Description>
     <PackageTags>vector;search;rag;embedding;ai</PackageTags>

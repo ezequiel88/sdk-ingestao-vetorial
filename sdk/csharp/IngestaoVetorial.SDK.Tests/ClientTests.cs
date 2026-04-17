@@ -5,6 +5,7 @@ using IngestaoVetorial.SDK;
 using IngestaoVetorial.SDK.Exceptions;
 using IngestaoVetorial.SDK.Models;
 using Xunit;
+using System.Reflection;
 
 namespace IngestaoVetorial.SDK.Tests;
 
@@ -65,6 +66,17 @@ file static class Helpers
 
 public class CollectionsTests
 {
+    [Fact]
+    public void Constructor_NormalizesBaseUrlBeforeAssigningBaseAddress()
+    {
+        using var client = new IngestaoVetorialClient(" http://localhost:8000/// ", "test-key");
+
+        var httpField = typeof(IngestaoVetorialClient).GetField("_http", BindingFlags.NonPublic | BindingFlags.Instance);
+        var http = Assert.IsType<HttpClient>(httpField?.GetValue(client));
+
+        Assert.Equal(new Uri("http://localhost:8000/"), http.BaseAddress);
+    }
+
     [Fact]
     public async Task EmbeddingModels_ReturnsModels()
     {
