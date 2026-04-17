@@ -2,7 +2,7 @@
 
 SDK PHP oficial para a API do **Ingestão Vetorial** — sistema de ingestão e busca vetorial com suporte a RAG (Retrieval-Augmented Generation).
 
-Requer PHP 8.1+ e Guzzle 7. Totalmente compatível com **Laravel**, **Symfony** e PHP puro.
+Requer PHP 8.2+ e Guzzle 7. Totalmente compatível com **Laravel**, **Symfony** e PHP puro.
 
 Os endpoints paginados da API respondem com `items` e `meta`, mas o SDK continua retornando arrays de DTOs ou strings nos métodos de lista, desempacotando `items` internamente para manter compatibilidade.
 
@@ -31,7 +31,7 @@ Os endpoints paginados da API respondem com `items` e `meta`, mas o SDK continua
 
 ## Requisitos
 
-- PHP ≥ 8.1
+- PHP ≥ 8.2
 - `guzzlehttp/guzzle: ^7.0`
 
 ---

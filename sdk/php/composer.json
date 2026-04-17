@@ -1,12 +1,12 @@
 {
   "name": "ingestao-vetorial/sdk",
-  "description": "PHP 8.1 SDK for the Ingestão Vetorial API — Guzzle-based, Laravel-compatible.",
+  "description": "PHP 8.2 SDK for the Ingestão Vetorial API — Guzzle-based, Laravel-compatible.",
   "version": "0.1.0",
   "type": "library",
   "homepage": "https://github.com/ezequiel88/sdk-ingestao-vetorial",
   "license": "MIT",
   "require": {
-    "php": "^8.1",
+    "php": "^8.2",
     "guzzlehttp/guzzle": "^7.0"
   },
   "require-dev": {
