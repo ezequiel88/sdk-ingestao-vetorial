@@ -41,6 +41,7 @@ $env:GITHUB_TOKEN = "<token-com-acesso-admin-ao-repo>"
 
 - `PACKAGIST_USERNAME`: usuario da conta que consegue disparar update no Packagist.
 - `PACKAGIST_API_TOKEN`: token de API dessa conta.
+- Antes do primeiro release do PHP, cadastre manualmente o repositorio `https://github.com/ezequiel88/sdk-ingestao-vetorial` em `https://packagist.org/packages/submit`.
 
 Observacao: o workflow nao depende mais de `PACKAGIST_PACKAGE`. A notificacao usa diretamente a URL publica do repositorio Git, que e o formato esperado pela API de update do Packagist.
 
