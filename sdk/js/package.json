@@ -1,6 +1,6 @@
 {
   "name": "ingestao-vetorial-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TypeScript SDK for the Ingestão Vetorial API — Node.js 18+, React Native, and browsers.",
   "type": "module",
   "main": "./dist/index.cjs",
