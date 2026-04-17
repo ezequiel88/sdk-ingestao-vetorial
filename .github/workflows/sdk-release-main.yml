@@ -1,0 +1,161 @@
+name: SDK – Main release orchestrator (standalone)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sdk-release-main
+  cancel-in-progress: false
+
+jobs:
+  orchestrate:
+    if: ${{ !contains(github.event.head_commit.message, '[skip sdk-release]') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          coverage: none
+      - uses: dart-lang/setup-dart@v1
+
+      - name: Build release plan
+        id: plan
+        run: python .github/scripts/sdk_release.py plan --output-json sdk-release-plan.json --github-output
+
+      - name: Stop when there are no pending SDK releases
+        if: steps.plan.outputs.has_releases != 'true'
+        run: echo "No pending changesets. Skipping SDK release orchestration."
+
+      - name: Install Python SDK dependencies
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/python
+        run: pip install -e ".[dev]"
+      - name: Run Python SDK tests
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/python
+        run: pytest tests/ -v --tb=short
+
+      - name: Install JavaScript SDK dependencies
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/js
+        run: npm install
+      - name: Type-check JavaScript SDK
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/js
+        run: npm run typecheck
+      - name: Run JavaScript SDK tests
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/js
+        run: npm test -- --reporter=verbose
+      - name: Build JavaScript SDK
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/js
+        run: npm run build
+
+      - name: Run Go SDK tests
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/go
+        run: go test ./... -v
+      - name: Vet Go SDK
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/go
+        run: go vet ./...
+
+      - name: Restore C# SDK dependencies
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/csharp
+        run: dotnet restore
+      - name: Build C# SDK
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/csharp
+        run: dotnet build --no-restore -c Release
+      - name: Test C# SDK
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/csharp
+        run: dotnet test --no-build -c Release --logger "console;verbosity=normal"
+
+      - name: Install PHP SDK dependencies
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/php
+        run: composer install --no-interaction --prefer-dist
+      - name: Run PHP SDK tests
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/php
+        run: ./vendor/bin/phpunit --testdox
+      - name: Run PHP SDK static analysis
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/php
+        run: ./vendor/bin/phpstan analyse --memory-limit=256M
+
+      - name: Install Flutter SDK dependencies
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/flutter
+        run: dart pub get
+      - name: Check Flutter SDK formatting
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/flutter
+        run: dart format --output=none --set-exit-if-changed .
+      - name: Analyze Flutter SDK
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/flutter
+        run: dart analyze
+      - name: Run Flutter SDK tests
+        if: steps.plan.outputs.has_releases == 'true'
+        working-directory: sdk/flutter
+        run: dart test
+
+      - name: Apply version bumps
+        if: steps.plan.outputs.has_releases == 'true'
+        run: python .github/scripts/sdk_release.py apply --plan-file sdk-release-plan.json
+
+      - name: Configure git author
+        if: steps.plan.outputs.has_releases == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit version updates
+        if: steps.plan.outputs.has_releases == 'true'
+        run: |
+          git add .changeset sdk/python/pyproject.toml sdk/js/package.json sdk/php/composer.json sdk/csharp/IngestaoVetorial.SDK/IngestaoVetorial.SDK.csproj sdk/flutter/pubspec.yaml
+          git commit -m "chore(release): version SDKs [skip sdk-release]"
+
+      - name: Push release commit
+        if: steps.plan.outputs.has_releases == 'true'
+        run: git push origin HEAD:${GITHUB_REF_NAME}
+
+      - name: Create and push release tags
+        if: steps.plan.outputs.has_releases == 'true'
+        shell: bash
+        run: |
+          while IFS= read -r tag; do
+            if git rev-parse "$tag" >/dev/null 2>&1; then
+              echo "Tag $tag already exists; skipping"
+              continue
+            fi
+            git tag "$tag"
+            git push origin "$tag"
+          done < <(python .github/scripts/sdk_release.py print-tags --plan-file sdk-release-plan.json)

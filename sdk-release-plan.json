@@ -1,0 +1,67 @@
+{
+  "changesets": [
+    {
+      "path": ".changeset/standalone-release-readiness.md",
+      "releases": {
+        "python": "patch",
+        "js": "patch",
+        "php": "patch",
+        "csharp": "patch",
+        "go": "patch",
+        "flutter": "patch"
+      },
+      "summary": "Prepara o repositorio standalone para release automatizado dos SDKs, com identidade normalizada, documentacao operacional e workflows de publicacao validados."
+    }
+  ],
+  "releases": [
+    {
+      "sdk": "python",
+      "bump": "patch",
+      "current_version": "0.1.0",
+      "next_version": "0.1.1",
+      "tag": "sdk-python-v0.1.1",
+      "manifest": "sdk/python/pyproject.toml"
+    },
+    {
+      "sdk": "js",
+      "bump": "patch",
+      "current_version": "0.1.0",
+      "next_version": "0.1.1",
+      "tag": "sdk-js-v0.1.1",
+      "manifest": "sdk/js/package.json"
+    },
+    {
+      "sdk": "php",
+      "bump": "patch",
+      "current_version": "0.1.0",
+      "next_version": "0.1.1",
+      "tag": "sdk-php-v0.1.1",
+      "manifest": "sdk/php/composer.json"
+    },
+    {
+      "sdk": "csharp",
+      "bump": "patch",
+      "current_version": "0.1.0",
+      "next_version": "0.1.1",
+      "tag": "sdk-csharp-v0.1.1",
+      "manifest": "sdk/csharp/IngestaoVetorial.SDK/IngestaoVetorial.SDK.csproj"
+    },
+    {
+      "sdk": "go",
+      "bump": "patch",
+      "current_version": "0.0.0",
+      "next_version": "0.0.1",
+      "tag": "sdk/go/v0.0.1",
+      "manifest": ""
+    },
+    {
+      "sdk": "flutter",
+      "bump": "patch",
+      "current_version": "0.1.0",
+      "next_version": "0.1.1",
+      "tag": "sdk-flutter-v0.1.1",
+      "manifest": "sdk/flutter/pubspec.yaml"
+    }
+  ],
+  "has_releases": true
+}

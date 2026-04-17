@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>12</LangVersion>
+    <PackageId>IngestaoVetorial.SDK</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Ezequiel Tavares</Authors>
+    <Description>Official .NET SDK for the Ingestão Vetorial API</Description>
+    <PackageTags>vector;search;rag;embedding;ai</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/ezequiel88/sdk-ingestao-vetorial</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ezequiel88/sdk-ingestao-vetorial/tree/main/csharp</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+</Project>

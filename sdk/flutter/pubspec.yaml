@@ -1,0 +1,17 @@
+name: ingestao_vetorial_flutter_sdk
+description: Flutter and Dart SDK for the Ingestao Vetorial API.
+version: 0.1.0
+homepage: https://github.com/ezequiel88/sdk-ingestao-vetorial/tree/main/flutter
+repository: https://github.com/ezequiel88/sdk-ingestao-vetorial
+issue_tracker: https://github.com/ezequiel88/sdk-ingestao-vetorial/issues
+documentation: https://github.com/ezequiel88/sdk-ingestao-vetorial/tree/main/flutter
+
+environment:
+  sdk: ^3.4.0
+
+dependencies:
+  http: ^1.2.1
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.25.2

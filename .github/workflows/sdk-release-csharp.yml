@@ -1,0 +1,45 @@
+name: SDK – Publish C# to NuGet
+
+on:
+  push:
+    tags:
+      - "sdk-csharp-v*.*.*"
+
+jobs:
+  release:
+    name: Build, test & publish to NuGet
+    runs-on: ubuntu-latest
+    environment: nuget
+    defaults:
+      run:
+        working-directory: sdk/csharp
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Set version from tag
+        id: version
+        run: |
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#sdk-csharp-v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore -c Release
+      - name: Test
+        run: dotnet test --no-build -c Release --logger "console;verbosity=normal"
+      - name: Pack
+        run: |
+          dotnet pack IngestaoVetorial.SDK/IngestaoVetorial.SDK.csproj \
+            --no-build -c Release \
+            -p:PackageVersion=${{ steps.version.outputs.version }} \
+            -o ./nupkg
+      - name: Push to NuGet
+        run: |
+          dotnet nuget push ./nupkg/*.nupkg \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate

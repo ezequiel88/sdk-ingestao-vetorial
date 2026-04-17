@@ -1,0 +1,45 @@
+name: SDK – Publish Go module (GitHub Release)
+
+on:
+  push:
+    tags:
+      - "sdk/go/v*.*.*"
+
+jobs:
+  release:
+    name: Test & create GitHub release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: sdk/go
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+      - name: Run tests
+        run: go test ./... -v
+      - name: Vet
+        run: go vet ./...
+      - name: Extract version
+        id: version
+        run: |
+          TAG="${{ github.ref_name }}"
+          echo "version=${TAG#sdk/go/v}" >> "$GITHUB_OUTPUT"
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "Go SDK v${{ steps.version.outputs.version }}"
+          body: |
+            ## Go SDK v${{ steps.version.outputs.version }}
+
+            Install:
+            ```bash
+            go get github.com/ezequiel88/sdk-ingestao-vetorial/sdk/go@v${{ steps.version.outputs.version }}
+            ```
+          draft: false
+          prerelease: false

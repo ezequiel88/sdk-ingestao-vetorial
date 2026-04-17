@@ -1,0 +1,42 @@
+name: SDK – Publish TypeScript to npm
+
+on:
+  push:
+    tags:
+      - "sdk-js-v*.*.*"
+
+jobs:
+  release:
+    name: Build & publish to npm
+    runs-on: ubuntu-latest
+    environment: npm
+    defaults:
+      run:
+        working-directory: sdk/js
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+      - name: Set version from tag
+        id: version
+        run: |
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#sdk-js-v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Bump package.json version
+        run: npm version "${{ steps.version.outputs.version }}" --no-git-tag-version
+      - name: Install dependencies
+        run: npm install
+      - name: Type-check
+        run: npm run typecheck
+      - name: Run tests
+        run: npm test -- --reporter=verbose
+      - name: Build
+        run: npm run build
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
