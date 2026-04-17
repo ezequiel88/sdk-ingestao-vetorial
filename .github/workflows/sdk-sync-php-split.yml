@@ -1,0 +1,48 @@
+name: Sync PHP SDK to dedicated repository
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "sdk/php/**"
+      - ".github/workflows/sdk-sync-php-split.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Split sdk/php to sdk-php-ingestao-vetorial
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Compute split commit
+        id: split
+        run: |
+          SPLIT_SHA=$(git subtree split --prefix=sdk/php HEAD)
+          echo "sha=$SPLIT_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Push split branch to dedicated repository
+        env:
+          PHP_SPLIT_PUSH_TOKEN: ${{ secrets.PHP_SPLIT_PUSH_TOKEN }}
+        run: |
+          if [ -z "$PHP_SPLIT_PUSH_TOKEN" ]; then
+            echo "Missing PHP_SPLIT_PUSH_TOKEN secret"
+            exit 1
+          fi
+
+          git push \
+            "https://x-access-token:${PHP_SPLIT_PUSH_TOKEN}@github.com/ezequiel88/sdk-php-ingestao-vetorial.git" \
+            "${{ steps.split.outputs.sha }}:refs/heads/main" \
+            --force

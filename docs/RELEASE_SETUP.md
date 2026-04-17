@@ -45,6 +45,12 @@ $env:GITHUB_TOKEN = "<token-com-acesso-admin-ao-repo>"
 
 Observacao: o workflow nao depende mais de `PACKAGIST_PACKAGE`. A notificacao usa diretamente a URL publica do repositorio Git, que e o formato esperado pela API de update do Packagist.
 
+### Split do SDK PHP
+
+- `PHP_SPLIT_PUSH_TOKEN`: secret de repositório no monorepo com permissão de escrita em `ezequiel88/sdk-php-ingestao-vetorial`.
+- O workflow `sdk-sync-php-split.yml` usa esse token para fazer o split de `sdk/php` e atualizar a branch `main` do repositório dedicado.
+- Durante a migração, o release do Packagist deve acontecer no repositório dedicado, não no monorepo.
+
 ### `nuget`
 
 - `NUGET_API_KEY`: chave de publicacao do NuGet para `IngestaoVetorial.SDK`.

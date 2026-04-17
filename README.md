@@ -19,6 +19,12 @@ Repositorio publico dedicado aos SDKs do Ingestao Vetorial.
 2. Ao entrar na `main`, o workflow `sdk-release-main.yml` valida os SDKs, calcula as proximas versoes, atualiza os manifests necessarios, remove os changesets consumidos e cria tags.
 3. As tags disparam os workflows por linguagem para publicar em PyPI, npm, Packagist, NuGet e GitHub Releases.
 
+## Migracao do PHP
+
+- O SDK PHP esta sendo sincronizado para o repositorio dedicado `ezequiel88/sdk-php-ingestao-vetorial`.
+- O workflow `sdk-sync-php-split.yml` faz o split de `sdk/php` e atualiza a branch `main` do repositorio dedicado.
+- O corte final, com remocao de `sdk/php` deste monorepo, deve acontecer apenas depois da validacao do novo repositorio e do release no Packagist.
+
 ## Ajustes apos a criacao do repositorio
 
 Confirme estes pontos sempre que a URL publica ou a organizacao mudar:
@@ -36,6 +42,7 @@ Confirme estes pontos sempre que a URL publica ou a organizacao mudar:
 - Environment `packagist`: `PACKAGIST_USERNAME`, `PACKAGIST_API_TOKEN`
 - Environment `nuget`: `NUGET_API_KEY`
 - Environment `pubdev`: sem secret obrigatoria no modelo atual do pub.dev com GitHub Actions + OIDC
+- Secret de repositorio: `PHP_SPLIT_PUSH_TOKEN` com permissao de escrita em `ezequiel88/sdk-php-ingestao-vetorial`
 
 O SDK Go usa apenas o `GITHUB_TOKEN` automatico para criar GitHub Releases.
 
