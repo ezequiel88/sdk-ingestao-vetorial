@@ -16,6 +16,7 @@ Crie estes environments no repositorio:
 - `pubdev`
 
 Se quiser aprovacao manual antes da publicacao, configure as protection rules no proprio environment.
+No caso do pub.dev com GitHub Actions, configure o package no painel Admin do pub.dev para aceitar publicacao automatizada do repositório `ezequiel88/sdk-ingestao-vetorial` usando o padrao de tag `sdk-flutter-v{{version}}`. Se quiser atrelar isso ao environment do GitHub, configure o mesmo nome de environment tambem no pub.dev.
 
 Se o repositório remoto ainda estiver vazio, faça antes o primeiro push da branch `main`. Sem esse push inicial, os workflows e os environments ainda não existirão no GitHub.
 
@@ -49,7 +50,9 @@ Observacao: o workflow nao depende mais de `PACKAGIST_PACKAGE`. A notificacao us
 
 ### `pubdev`
 
-- `PUB_DEV_ACCESS_TOKEN`: token de publicacao do pub.dev para o pacote `ingestao_vetorial_flutter_sdk`.
+- Nenhum secret adicional e necessario no modelo atual com GitHub Actions + OIDC.
+- O pacote `ingestao_vetorial_flutter_sdk` precisa estar previamente cadastrado no pub.dev e com publicacao automatizada habilitada no painel Admin.
+- A primeira publicacao do pacote continua sendo manual com `dart pub publish`.
 
 ## Permissoes do repositorio
 

@@ -27,6 +27,25 @@ http.StreamedResponse jsonResponse(Object body, {int statusCode = 200}) {
 
 void main() {
   group('IngestaoVetorialClient', () {
+    test('normalizes baseUrl before building requests', () async {
+      final client = RecordingClient(
+        (request) async => jsonResponse(<String, Object?>{
+          'items': const <Object?>[],
+          'meta': <String, Object?>{'has_more': false},
+        }),
+      );
+
+      final sdk = IngestaoVetorialClient(
+        baseUrl: ' http://localhost:8000/// ',
+        httpClient: client,
+      );
+
+      await sdk.collections();
+
+      expect(client.lastRequest?.url.origin, 'http://localhost:8000');
+      expect(client.lastRequest?.url.path, '/api/v1/collections');
+    });
+
     test('unwraps paginated collections and sends API key', () async {
       final client = RecordingClient(
         (request) async => jsonResponse(<String, Object?>{

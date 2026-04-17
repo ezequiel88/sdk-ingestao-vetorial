@@ -5,6 +5,9 @@ on:
     tags:
       - "sdk-flutter-v*.*.*"
 
+permissions:
+  id-token: write
+
 jobs:
   release:
     name: Analyze, test & publish to pub.dev
@@ -34,7 +37,5 @@ jobs:
         run: dart analyze
       - name: Run tests
         run: dart test
-      - name: Configure pub.dev token
-        run: dart pub token add https://pub.dev --env-var PUB_DEV_ACCESS_TOKEN
       - name: Publish to pub.dev
         run: dart pub publish --force

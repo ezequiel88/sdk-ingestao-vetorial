@@ -12,7 +12,10 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/ezequiel88/sdk-ingestao-vetorial</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/ezequiel88/sdk-ingestao-vetorial/tree/main/csharp</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/ezequiel88/sdk-ingestao-vetorial/tree/main/sdk/csharp</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" Link="README.md" />
+  </ItemGroup>
 </Project>

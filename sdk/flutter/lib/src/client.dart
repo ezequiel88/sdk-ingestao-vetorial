@@ -32,7 +32,7 @@ class IngestaoVetorialClient {
     this.apiKey,
     Duration timeout = const Duration(seconds: 30),
     http.Client? httpClient,
-  })  : _baseUrl = baseUrl.replaceAll(RegExp(r'/+$'), ''),
+  })  : _baseUrl = baseUrl.trim().replaceAll(RegExp(r'/+$'), ''),
         _timeout = timeout,
         _httpClient = httpClient ?? http.Client();
 

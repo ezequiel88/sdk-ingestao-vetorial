@@ -35,7 +35,7 @@ Confirme estes pontos sempre que a URL publica ou a organizacao mudar:
 - Environment `npm`: `NPM_TOKEN`
 - Environment `packagist`: `PACKAGIST_USERNAME`, `PACKAGIST_API_TOKEN`
 - Environment `nuget`: `NUGET_API_KEY`
-- Environment `pubdev`: `PUB_DEV_ACCESS_TOKEN`
+- Environment `pubdev`: sem secret obrigatoria no modelo atual do pub.dev com GitHub Actions + OIDC
 
 O SDK Go usa apenas o `GITHUB_TOKEN` automatico para criar GitHub Releases.
 

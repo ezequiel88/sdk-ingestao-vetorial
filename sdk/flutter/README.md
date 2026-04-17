@@ -13,7 +13,7 @@ O pacote cobre colecoes, documentos, upload, busca semantica, tags, estatisticas
 
 ```yaml
 dependencies:
-  ingestao_vetorial_flutter_sdk: ^0.1.0
+  ingestao_vetorial_flutter_sdk: ^0.1.1
 ```
 
 ## Inicio rapido
